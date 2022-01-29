@@ -1,7 +1,8 @@
 import math
 
 n = int(input("Enter the number of entries to calculate mortgage: "))
-name_arr, balance_arr, intrestrate_arr, curr_mp_arr, newpay_arr, cur_dur, new_dur, curr_int, new_int, savings, fees = [], [], [], [], [], [],[],[],[],[],[]
+
+dictx = []
 
 def duration(pay,intrestrate,balance):
     ii = intrestrate/1200
@@ -15,31 +16,36 @@ for i in range(1,n+1):
     curr_mp = float(input("Enter current montly payment: $"))                    
     ext_mp = float(input("Enter extra monthly payment: $"))
     print(" ")
-    print(" ")                      
-    name_arr.append(name)                                                       #Names of Borrower
-    balance_arr.append(format(balance, '.2f'))                                        #Mortgage Balance of borrower
-    intrestrate_arr.append(format(intrestrate, '.3f'))                                #Intrest rate
-    curr_mp_arr.append(format(curr_mp, '.2f'))                                        #Current Payment
-    newpay_arr.append(format(curr_mp+ext_mp, '.2f'))                                  #New monthly Payment
+    print(" ")
     obj = duration(curr_mp,intrestrate,balance)                                 #Current duration
-    cd = round(obj)
-    cur_dur.append(cd)
+    curr_d = round(obj)
     obj = duration(curr_mp+ext_mp,intrestrate,balance)                          #New duration
-    nd = round(obj)
-    new_dur.append(nd)
-    curr_int.append(format((curr_mp*cd)-balance,'.2f'))                              #Current Intrest
-    new_int.append(format(((curr_mp+ext_mp)*nd)-balance,'.2f'))                      #New Intrest
-    savings.append(format(((curr_mp*cd)-balance)-(((curr_mp+ext_mp)*nd)-balance),'.2f')) #Savings
-    if nd<=(cd/2):
-        fees.append("Extra Fees")
+    new_d = round(obj)   
+    if new_d<=(curr_d/2):
+        fees="Extra Fees"
     else:
-        fees.append("No Fees")
+        fees="No Fee"                   
+    varx = [name,
+                    format(balance, '.2f'),
+                    format(intrestrate, '.3f'),
+                    format(curr_mp, '.2f'),
+                    curr_d,
+                    format((curr_mp*curr_d)-balance, '.2f'),
+                    format(curr_mp+ext_mp, '.2f'),
+                    new_d,
+                    format(((curr_mp+ext_mp)*new_d)-balance, '.2f'),
+                    float(((curr_mp*curr_d)-balance)-(((curr_mp+ext_mp)*new_d)-balance)),
+                    fees]
+    dictx.append(varx)
+
+dictx.sort(key = lambda x: x[9], reverse=True)
+
 print("------------------------------------------------------------------------------------------------------------------------------------------------------------------")
 print("Name   | Mortgage Balance| Intrest Rate|               Current                    |                 New                              |    Savings    |    Fees   |")
 print("                                       |   Payment   |   Duration  |    Intrest   |     Payment     |    Duration    |    Intrest    |")
 print("------------------------------------------------------------------------------------------------------------------------------------------------------------------")
 for i in range(0,n):
-    print(name_arr[i],"     ", "$"+str(balance_arr[i]),"      ", str(intrestrate_arr[i])+"%","      ", "$"+str(curr_mp_arr[i]),"    ", 
-    str(int(cur_dur[i]/12))+"yrs "+str(int(cur_dur[i]%12))+"mo      ","$"+str(curr_int[i]),"     ","$"+str(newpay_arr[i]),"      ",
-    str(int(new_dur[i]/12))+"yrs ",str(int(new_dur[i]%12))+"mo      ", "$"+str(new_int[i]),"      ", "$"+str(savings[i]),"      ", fees[i])
+    print(dictx[i][0],"     ", "$"+dictx[i][1],"      ", dictx[i][2]+"%","      ", "$"+dictx[i][3],"    ",str(int((dictx[i][4])/12))+"yrs "
+    +str(int((dictx[i][4])%12))+"mo      ","$"+dictx[i][5],"     ","$"+dictx[i][6],"      ",str(int((dictx[i][7])/12))+"yrs ",
+    str(int((dictx[i][7])%12))+"mo      ", "$"+dictx[i][8],"      ", "$"+format(dictx[i][9], '.2f'),"      ", dictx[i][10])
 print("------------------------------------------------------------------------------------------------------------------------------------------------------------------")
